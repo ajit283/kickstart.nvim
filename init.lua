@@ -180,6 +180,10 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
+-- Bind the toggle function to a keyboard shortcut
+-- For example, using <leader>tc (tc stands for 'toggle colorscheme')
+vim.keymap.set('n', '<leader>tc',':Telescope colorscheme<CR>', { noremap = true, silent = true })
+
 -- TIP: Disable arrow keys in normal mode
 -- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
 -- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
@@ -217,12 +221,12 @@ local function cycle_buffer(direction)
 end
 
 -- Set up keybindings
-vim.keymap.set('n', '<C-;>', function()
-  cycle_buffer 'next'
-end, { noremap = true, silent = true, desc = 'Cycle to next buffer' })
-vim.keymap.set('n', '<C-S-;>', function()
-  cycle_buffer 'prev'
-end, { noremap = true, silent = true, desc = 'Cycle to previous buffer' })
+-- vim.keymap.set('n', '<C-;>', function()
+--   cycle_buffer 'next'
+-- end, { noremap = true, silent = true, desc = 'Cycle to next buffer' })
+-- vim.keymap.set('n', '<C-S-;>', function()
+--   cycle_buffer 'prev'
+-- end, { noremap = true, silent = true, desc = 'Cycle to previous buffer' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -328,6 +332,85 @@ require('lazy').setup({
       }
     end,
   },
+  {
+    'ThePrimeagen/harpoon',
+    branch = 'harpoon2',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      local harpoon = require 'harpoon'
+      harpoon:setup {}
+
+      vim.keymap.set('n', '<leader>k', function()
+        harpoon.ui:toggle_quick_menu(harpoon:list())
+      end, { desc = 'Open harpoon window' })
+      vim.keymap.set('n', '<leader>a', function()
+        harpoon:list():add()
+      end)
+      vim.keymap.set('n', '<C-j>', function()
+        harpoon:list():select(1)
+      end)
+      vim.keymap.set('n', '<C-k>', function()
+        harpoon:list():select(2)
+      end)
+      vim.keymap.set('n', '<C-l>', function()
+        harpoon:list():select(3)
+      end)
+      vim.keymap.set('n', '<C-;>', function()
+        harpoon:list():select(4)
+      end)
+      vim.keymap.set('n', '<C-u>', function()
+        harpoon:list():select(5)
+      end)
+      vim.keymap.set('n', '<C-i>', function()
+        harpoon:list():select(6)
+      end)
+      vim.keymap.set('n', '<C-o>', function()
+        harpoon:list():select(7)
+      end)
+      vim.keymap.set('n', '<C-p>', function()
+        harpoon:list():select(8)
+      end)
+      vim.keymap.set('n', '<C-A-j>', function()
+        harpoon:list():replace_at(1)
+      end)
+      vim.keymap.set('n', '<C-A-k>', function()
+        harpoon:list():replace_at(2)
+      end)
+      vim.keymap.set('n', '<C-A-l>', function()
+        harpoon:list():replace_at(3)
+      end)
+      vim.keymap.set('n', '<C-A-;>', function()
+        harpoon:list():replace_at(4)
+      end)
+      vim.keymap.set('n', '<C-A-u>', function()
+        harpoon:list():replace_at(5)
+      end)
+      vim.keymap.set('n', '<C-A-i>', function()
+        harpoon:list():replace_at(6)
+      end)
+      vim.keymap.set('n', '<C-A-o>', function()
+        harpoon:list():replace_at(7)
+      end)
+      vim.keymap.set('n', '<C-A-p>', function()
+        harpoon:list():replace_at(8)
+      end)
+    end,
+  },
+  -- {
+  --   'akinsho/bufferline.nvim',
+  --   version = '*',
+  --   dependencies = 'nvim-tree/nvim-web-devicons',
+  --
+  --   config = function()
+  --     vim.opt.termguicolors = true
+  --     require('bufferline').setup {}
+  --     options = {
+  --       close_icon = '󰅖',
+  --       show_buffer_icons = false,
+  --       show_duplicate_prefix = true,
+  --     }
+  --   end,
+  -- },
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
@@ -1028,7 +1111,7 @@ require('lazy').setup({
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
