@@ -182,7 +182,7 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 
 -- Bind the toggle function to a keyboard shortcut
 -- For example, using <leader>tc (tc stands for 'toggle colorscheme')
-vim.keymap.set('n', '<leader>tc',':Telescope colorscheme<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>tc', ':Telescope colorscheme<CR>', { noremap = true, silent = true })
 
 -- TIP: Disable arrow keys in normal mode
 -- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
@@ -308,7 +308,7 @@ require('lazy').setup({
     config = function()
       require('nvim-tree').setup {
         filters = {
-          dotfiles = true,
+          dotfiles = false,
         },
         renderer = {
           icons = {
@@ -328,6 +328,7 @@ require('lazy').setup({
         },
         view = {
           adaptive_size = true,
+          side = 'right',
         },
       }
     end,
@@ -393,6 +394,46 @@ require('lazy').setup({
       end)
       vim.keymap.set('n', '<C-A-p>', function()
         harpoon:list():replace_at(8)
+      end)
+    end,
+  },
+  {
+    'melbaldove/llm.nvim',
+    dependencies = { 'nvim-neotest/nvim-nio' },
+    config = function()
+      require('llm').setup {
+        -- How long to wait for the request to start returning data.
+        timeout_ms = 10000,
+        services = {
+          -- Supported services configured by default
+          -- groq = {
+          --     url = "https://api.groq.com/openai/v1/chat/completions",
+          --     model = "llama3-70b-8192",
+          --     api_key_name = "GROQ_API_KEY",
+          -- },
+          -- openai = {
+          --     url = "https://api.openai.com/v1/chat/completions",
+          --     model = "gpt-4o",
+          --     api_key_name = "OPENAI_API_KEY",
+          -- },
+          anthropic = {
+            url = 'https://api.anthropic.com/v1/messages',
+            model = 'claude-3-5-sonnet-20240620',
+            api_key_name = 'ANTHROPIC_API_KEY',
+          },
+        },
+      }
+      vim.keymap.set('n', '<leader>m', function()
+        require('llm').create_llm_md()
+      end)
+      vim.keymap.set('n', '<leader>g,', function()
+        require('llm').prompt { replace = false, service = 'anthropic' }
+      end)
+      vim.keymap.set('v', '<leader>g,', function()
+        require('llm').prompt { replace = false, service = 'anthropic' }
+      end)
+      vim.keymap.set('v', '<leader>g.', function()
+        require('llm').prompt { replace = true, service = 'anthropic' }
       end)
     end,
   },
@@ -759,6 +800,7 @@ require('lazy').setup({
       local servers = {
         clangd = {},
         gopls = {},
+        zls = {},
         -- pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
